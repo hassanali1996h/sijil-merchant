@@ -17,7 +17,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.debtledgeriq.sijil",
+      "package": "com.debtledgeriq.sijil.merchant",
       "edgeToEdgeEnabled": true
     },
     "experiments": {
