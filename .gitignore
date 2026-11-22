@@ -17,3 +17,7 @@ ios/
 coverage/
 .supabase/
 supabase/.temp/
+# Local Android signing material — never commit
+credentials.json
+*.keystore
+*.jks

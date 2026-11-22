@@ -20,6 +20,7 @@
       }
     },
     "production": {
+      "credentialsSource": "local",
       "environment": "production",
       "distribution": "store",
       "autoIncrement": true,

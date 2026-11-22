@@ -18,7 +18,8 @@
     },
     "android": {
       "package": "com.debtledgeriq.sijil.merchant",
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "versionCode": 2
     },
     "experiments": {
       "typedRoutes": true
