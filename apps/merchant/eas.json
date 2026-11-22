@@ -4,6 +4,7 @@
   },
   "build": {
     "preview": {
+      "credentialsSource": "local",
       "distribution": "internal",
       "environment": "preview",
       "env": {
