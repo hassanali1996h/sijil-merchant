@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "سِجل",
-    "slug": "sijil-merchant",
+    "slug": "debt-ledger-merchant",
     "scheme": "debtledger-merchant",
     "version": "0.1.0",
     "orientation": "portrait",
