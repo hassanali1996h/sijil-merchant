@@ -11,7 +11,9 @@ export function formatIqd(amount: number | bigint | string, locale: 'ar-IQ' | 'c
   } else {
     throw new Error('IQD amount must be a whole number');
   }
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(integer) + ' د.ع';
+  const grouped = integer.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const localized = locale === 'ar-IQ' || locale === 'ckb-IQ' ? grouped.replace(/\d/g, d => String.fromCharCode(0x660 + Number(d))).replace(/,/g, '\u066c') : grouped;
+  return localized + ' د.ع';
 }
 
 export function parsePositiveIqd(raw: string): number {
