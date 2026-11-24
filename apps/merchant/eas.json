@@ -28,6 +28,18 @@
       "android": {
         "buildType": "app-bundle"
       }
+    },
+    "closed-test-staging": {
+      "credentialsSource": "local",
+      "distribution": "store",
+      "environment": "preview",
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_DEBT_LEDGER_PREVIEW": "0"
+      },
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
   }
 }
