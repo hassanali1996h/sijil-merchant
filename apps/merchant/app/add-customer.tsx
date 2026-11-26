@@ -3,20 +3,21 @@ import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable, Sc
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { normalizeIraqiPhone, palette, parseNonNegativeIqd, radii } from '@debt/shared';
+import { palette, parseNonNegativeIqd, radii } from '@debt/shared';
 import { supabase } from '../src/lib/supabase';
+import { normalizeEmail } from '../src/lib/auth';
 import { shareCustomerInvitation } from '../src/lib/invitations';
 
 export default function AddCustomerScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('+964');
+  const [email, setEmail] = useState('');
   const [creditLimit, setCreditLimit] = useState('0');
   const [busy, setBusy] = useState(false);
 
   async function saveCustomer() {
-    const normalizedPhone = normalizeIraqiPhone(phone);
+    const normalized = normalizeEmail(email);
     let limit = 0;
     try {
       limit = parseNonNegativeIqd(creditLimit);
@@ -28,14 +29,14 @@ export default function AddCustomerScreen() {
       Alert.alert(t('common.error'), t('merchant.customerName'));
       return;
     }
-    if (!normalizedPhone) {
-      Alert.alert(t('common.error'), t('merchant.phoneRequired'));
+    if (!normalized) {
+      Alert.alert(t('common.error'), t('auth.invalidEmail'));
       return;
     }
 
     setBusy(true);
-    const { data: linkId, error } = await supabase.rpc('add_customer', {
-      p_phone_e164: normalizedPhone,
+    const { data: linkId, error } = await supabase.rpc('add_customer_email', {
+      p_email: normalized,
       p_display_name: name.trim(),
       p_credit_limit_iqd: limit,
     });
@@ -94,20 +95,22 @@ export default function AddCustomerScreen() {
               />
             </View>
             <View style={styles.field}>
-              <Text style={styles.label}>{t('auth.phone')}</Text>
+              <Text style={styles.label}>{t('auth.email')}</Text>
               <TextInput
-                value={phone}
-                onChangeText={setPhone}
-                placeholder="+964 750 000 0000"
+                value={email}
+                onChangeText={setEmail}
+                placeholder="name@example.com"
                 placeholderTextColor={palette.muted}
                 style={[styles.input, styles.ltrInput]}
                 textAlign="left"
-                keyboardType="phone-pad"
-                autoComplete="tel"
-                textContentType="telephoneNumber"
-                maxLength={24}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="email"
+                textContentType="emailAddress"
+                maxLength={254}
               />
-              <Text style={styles.hint}>{t('auth.phoneHint')}</Text>
+              <Text style={styles.hint}>{t('merchant.emailInviteHint')}</Text>
             </View>
             <View style={styles.field}>
               <Text style={styles.label}>{t('merchant.creditLimit')}</Text>

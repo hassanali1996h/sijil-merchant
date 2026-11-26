@@ -10,7 +10,7 @@ import { requestAndRegisterPushToken, syncGrantedPushToken } from '../src/lib/no
 import { LanguageControl } from '../src/components/LanguageControl';
 
 type Business = { id: string; name: string };
-type CustomerLink = { id: string; customer_display_name: string; customer_phone_e164: string | null; credit_limit_iqd: number | string; status: string; confirmed_balance_iqd?: number | string; pending_debt_iqd?: number | string };
+type CustomerLink = { id: string; customer_display_name: string; customer_phone_e164: string | null; customer_email?: string | null; credit_limit_iqd: number | string; status: string; confirmed_balance_iqd?: number | string; pending_debt_iqd?: number | string };
 type LedgerTransaction = { id: string; kind: 'debt' | 'payment'; amount_iqd: number | string; status: string; created_at: string; customer_link_id: string };
 
 export default function MerchantHomeScreen() {
@@ -44,7 +44,7 @@ export default function MerchantHomeScreen() {
     setPendingCount(0);
     setLoading(false);
     Alert.alert(t('auth.deviceOtpTitle'), t(messageKey), [
-      { text: t('auth.phone'), onPress: () => router.replace('/phone') },
+      { text: t('auth.signInTitle'), onPress: () => router.replace('/sign-in') },
     ]);
   }
 
@@ -101,7 +101,7 @@ export default function MerchantHomeScreen() {
 
     const [entitlementResponse, customerResponse, pendingResponse, transactionResponse] = await Promise.all([
       supabase.from('merchant_entitlements').select('trial_ends_at,paid_until').eq('business_id', currentBusiness.id).maybeSingle(),
-      supabase.from('customer_links').select('id,customer_display_name,customer_phone_e164,credit_limit_iqd,status').eq('business_id', currentBusiness.id).order('created_at', { ascending: false }),
+      supabase.from('customer_links').select('id,customer_display_name,customer_email,customer_phone_e164,credit_limit_iqd,status').eq('business_id', currentBusiness.id).order('created_at', { ascending: false }),
       supabase.from('ledger_transactions').select('id', { count: 'exact', head: true }).eq('business_id', currentBusiness.id).eq('status', 'pending'),
       supabase.from('ledger_transactions').select('id,kind,amount_iqd,status,created_at,customer_link_id').eq('business_id', currentBusiness.id).order('created_at', { ascending: false }).limit(5),
     ]);

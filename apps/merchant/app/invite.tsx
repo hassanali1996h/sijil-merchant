@@ -48,7 +48,7 @@ export default function CustomerInviteScreen() {
     return () => { active = false; };
   }, [linkId, retry, router]);
 
-  async function continueWithPhone() {
+  async function continueWithEmail() {
     if (status === 'error') {
       setChecking(true);
       setRetry((current) => current + 1);
@@ -61,7 +61,7 @@ export default function CustomerInviteScreen() {
         return;
       }
     }
-    router.replace(linkId ? { pathname: '/phone', params: { linkId } } : '/phone');
+    router.replace(linkId ? { pathname: '/sign-in', params: { linkId } } : '/sign-in');
   }
 
   if (checking) return <View style={styles.center}><ActivityIndicator color={palette.primary} /></View>;
@@ -75,7 +75,7 @@ export default function CustomerInviteScreen() {
         </View>
         <Text style={styles.title}>{t(status === 'not_available' ? 'customer.inviteMismatchTitle' : 'customer.inviteWelcome')}</Text>
         <Text style={styles.body}>{t(status === 'error' ? 'common.error' : status === 'not_available' ? 'customer.inviteMismatch' : 'customer.inviteInstructions')}</Text>
-        <Pressable accessibilityRole="button" onPress={() => void continueWithPhone()} style={({ pressed }) => [styles.button, pressed && styles.pressed]}>
+        <Pressable accessibilityRole="button" onPress={() => void continueWithEmail()} style={({ pressed }) => [styles.button, pressed && styles.pressed]}>
           <Text style={styles.buttonText}>{t(status === 'error' ? 'customer.refresh' : status === 'not_available' ? 'customer.inviteSwitchAccount' : 'customer.inviteContinue')}</Text>
         </Pressable>
         {status === 'not_available' && <Pressable accessibilityRole="button" onPress={() => router.replace('/client/home')}><Text style={styles.privacyNote}>{t('common.back')}</Text></Pressable>}

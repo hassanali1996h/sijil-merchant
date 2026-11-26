@@ -7,7 +7,7 @@ import { formatIqd, getMerchantAccessState, palette, parseNonNegativeIqd, radii,
 import { supabase } from '../../src/lib/supabase';
 import { shareCustomerInvitation } from '../../src/lib/invitations';
 
-type CustomerLink = { id: string; business_id: string; customer_display_name: string; customer_phone_e164: string | null; credit_limit_iqd: number | string; status: string };
+type CustomerLink = { id: string; business_id: string; customer_display_name: string; customer_phone_e164: string | null; customer_email: string | null; credit_limit_iqd: number | string; status: string };
 type Balance = { confirmed_balance_iqd: number | string; pending_debt_iqd: number | string; credit_limit_iqd: number | string };
 type TransactionRow = { id: string; kind: 'debt' | 'payment'; amount_iqd: number | string; description: string; status: string; created_at: string; due_at: string | null };
 
@@ -42,7 +42,7 @@ export default function MerchantCustomerScreen() {
     }
     setLoading(true);
     const { data: linkData, error: linkError } = await supabase.from('customer_links')
-      .select('id,business_id,customer_display_name,customer_phone_e164,credit_limit_iqd,status')
+      .select('id,business_id,customer_display_name,customer_email,customer_phone_e164,credit_limit_iqd,status')
       .eq('id', linkId)
       .maybeSingle();
     if (linkError) Alert.alert(t('common.error'), linkError.message);
@@ -145,7 +145,7 @@ export default function MerchantCustomerScreen() {
 
         <View style={styles.identityCard}>
           <View style={styles.avatar}><Text style={styles.avatarText}>{customer.customer_display_name.trim().charAt(0)}</Text></View>
-          <View style={styles.identityCopy}><Text style={styles.identityName}>{customer.customer_phone_e164 === null ? t('account.deletedAccount') : customer.customer_display_name}</Text><Text style={styles.identityPhone}>{customer.customer_phone_e164}</Text></View>
+          <View style={styles.identityCopy}><Text style={styles.identityName}>{!customer.customer_phone_e164 && !customer.customer_email ? t('account.deletedAccount') : customer.customer_display_name}</Text><Text style={styles.identityPhone}>{customer.customer_email}</Text></View>
           {customer.status === 'invited' && <Pressable accessibilityRole="button" onPress={() => void shareInvitation()} style={styles.shareButton}><Text style={styles.shareButtonText}>{t('merchant.shareInvitation')}</Text></Pressable>}
         </View>
 

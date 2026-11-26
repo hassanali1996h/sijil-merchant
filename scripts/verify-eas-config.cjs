@@ -16,7 +16,7 @@ assert.equal(eas.build?.production?.distribution, 'store', 'Production profile m
 assert.equal(eas.build?.production?.android?.buildType, 'app-bundle', 'Google Play needs an AAB');
 assert.equal(eas.build?.production?.environment, 'production', 'Production EAS environment missing');
 assert.equal(eas.build?.preview?.android?.buildType, 'apk', 'Preview must remain installable APK');
-assert.equal(eas.build?.preview?.env?.EXPO_PUBLIC_DEBT_LEDGER_PREVIEW, '1', 'Demo preview guard changed');
+assert.equal(eas.build?.preview?.env?.EXPO_PUBLIC_DEBT_LEDGER_PREVIEW, '0', 'Installable preview must NEVER display fake/demo data');
 assert.equal(eas.build?.['preview-connected']?.env?.EXPO_PUBLIC_DEBT_LEDGER_PREVIEW, '0', 'Connected preview must disable demo mode');
 
 console.log('Expo/EAS configuration checks passed for merchant.');

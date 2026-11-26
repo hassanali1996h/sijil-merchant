@@ -1,3 +1,14 @@
+# CURRENT PRODUCT AND AUTH DECISION — 26 NOV 2026 (overrides all phone-only and two-app instructions below)
+
+- Exactly one Android app **Sijil**: `apps/merchant`, Play package `com.debtledgeriq.sijil.merchant`, original Expo EAS project and signing. No separate customer Play app.
+- Account sign-in: **verified email OTP/magic link OR Google OAuth**. No phone-number input, SMS OTP or phone-based invites in the active app. Old phone columns remain ONLY to avoid deleting legacy ledger identities; never silently merge phone and Google accounts.
+- A user can be a free customer and a paid merchant using one Supabase user ID. Only merchant mutation requires server-verified 30-day trial or paid entitlement. Role UI is never authority.
+- Merchant invites by verified customer email with `add_customer_email`; customers remain free, and approve/dispute financial ledger requests. Only server-side RPC can mutate ledger.
+- Absolutely no mock or bypass sign-in in any installable build. Use real backend data only. QA may use automatically rolled-back synthetic transactions and mocked unit tests, never in-product demo data.
+- Production release is BLOCKED until live Google OAuth is enabled in Supabase with Google Cloud credentials, live custom SMTP and allowed redirect `debtledger-merchant://**` work, real-device login/invitation tested, and payments/review policies verified. Current linked Supabase staging `/auth/v1/settings` on 26 Nov 2026 reported Google disabled, email enabled. No fabricated success.
+- Previously recorded phone-only/two-app implementation guidance is obsolete. Preserve security, privacy and credit limits. The canonical migration is `supabase/migrations/20261126225000_email_google_unified_auth.sql` applied to staging on 26 Nov.
+
+---
 # UNIFIED SIJIL DECISION ? 2026-11-26 (supersedes the two-app release plan)
 
 - Publish a single app named Sijil from apps/merchant with existing Google Play package com.debtledgeriq.sijil.merchant and existing Expo project/Android signing.

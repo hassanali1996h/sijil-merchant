@@ -3,7 +3,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const configPath = process.env.SIJIL_APP_CONFIG || path.resolve(__dirname, '../apps/merchant/app.json');
-const expected = 'com.debtledgeriq.sijil';
+// Verified by Google Play rejection email dated 25 November 2026: existing listing ID.
+const expected = 'com.debtledgeriq.sijil.merchant';
 try {
   const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
   const actual = config?.expo?.android?.package;

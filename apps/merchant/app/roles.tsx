@@ -17,8 +17,8 @@ export default function ChooseRoleScreen() {
     void supabase.auth.getSession().then(({ data, error }) => {
       if (!active) return;
       setChecking(false);
-      if (error || !data.session) router.replace('/phone');
-    }).catch(() => { if (active) { setChecking(false); router.replace('/phone'); } });
+      if (error || !data.session) router.replace('/sign-in');
+    }).catch(() => { if (active) { setChecking(false); router.replace('/sign-in'); } });
     return () => { active = false; };
   }, [router]);
   if (checking) return <View style={styles.center}><ActivityIndicator color={palette.primary} /></View>;

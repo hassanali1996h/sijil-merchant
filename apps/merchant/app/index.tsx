@@ -52,7 +52,7 @@ export default function WelcomeScreen() {
         </View>
 
         <View style={styles.bottom}>
-          <Pressable style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]} onPress={() => router.push('/phone')}>
+          <Pressable style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]} onPress={() => router.push('/sign-in')}>
             <Text style={styles.buttonText}>{t('app.continue')}</Text>
             <Text style={styles.arrow}>‹</Text>
           </Pressable>

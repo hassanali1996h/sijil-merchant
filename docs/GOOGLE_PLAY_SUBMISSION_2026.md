@@ -4,7 +4,7 @@
 
 ## هوية التطبيق
 - الاسم الظاهر في إعداد Expo: **سِجل**
-- Android package: `com.debtledgeriq.sijil` (لا تعدّله بعد إنشاء الإدراج في Google Play)
+- Android package المؤكد: `com.debtledgeriq.sijil.merchant` — يجب الاحتفاظ به في كل تحديث لحزمة سِجل الموجودة.
 - نوع التطبيق: تطبيق جوّال؛ اللغة العربية الأساسية؛ واجهة سورانية داخلية (لا تضف لغة متجر لم يتم تحريرها واختبارها).
 - تصنيف مقترح للفحص: Finance أو Business وفق التصنيف المتاح الفعلي في Play Console؛ لا تختَر تصنيف القروض الشخصية لأن التطبيق دفتر سجلات لا يُصدر قروضاً.
 - سوق أولي: العراق؛ تحقّق من إتاحة البلد داخل Console قبل نشر أي إصدار.
@@ -18,7 +18,7 @@
 
 سِجل يساعد أصحاب المحلات على تنظيم حسابات العملاء في مكان واحد.
 
-• إضافة العملاء وربط حساباتهم عبر رقم الهاتف.
+• دخول العميل وصاحب المحل عبر البريد الإلكتروني أو Google، وربط العملاء بالدعوات إلى بريدهم الموثّق.
 • تحديد سقف الدين لكل عميل ومراجعة الرصيد وسجل العمليات.
 • إنشاء طلبات الدين والتسديد ومتابعة حالتها.
 • لا تدخل العملية ضمن الرصيد المؤكد حتى يوافق عليها العميل؛ ويمكنه الاعتراض.
@@ -41,17 +41,17 @@
 - الاسم القانوني للناشر/مسؤول البيانات وفترات الاحتفاظ النهائية بحاجة إلى التحقق؛ لا تقدّم إقرارات قانونية متعارضة مع الواقع.
 
 ## App content / Data safety — ورقة تدقيق وليست إجابات مفترضة
-- **Does the app collect data? YES** عند تفعيل Supabase: رقم هاتف للتحقق، معرّف حساب، الاسم/لغة الواجهة، ومعاملات الديون والتسديدات والوصف ومبالغها وتواريخها وحالة الموافقة، وبيانات المحلات المرتبطة.
-- **Data types to investigate and declare precisely:** Personal info (phone, name, user IDs)، Financial info/Other financial info (مبالغ الديون والرصيد، وربما purchase history في تطبيق صاحب المحل)، App activity (إن تم تخزينه)، Device or other IDs (معرف تثبيت التاجر/رمز الإشعارات)، App info/performance (فقط إذا SDK فعلي يرسل سجلات أو diagnostics). راجع تصنيف كل حقل وفق الأسئلة الفعلية.
+- **Does the app collect data? YES** عند تفعيل Supabase: البريد الإلكتروني/معرّف حساب Google للتحقق، معرّف حساب، الاسم/لغة الواجهة، ومعاملات الديون والتسديدات والوصف ومبالغها وتواريخها وحالة الموافقة، وبيانات المحلات المرتبطة.
+- **Data types to investigate and declare precisely:** Personal info (email, name, user IDs; legacy phone only if retained for existing users)، Financial info/Other financial info (مبالغ الديون والرصيد، وربما purchase history في تطبيق صاحب المحل)، App activity (إن تم تخزينه)، Device or other IDs (معرف تثبيت التاجر/رمز الإشعارات)، App info/performance (فقط إذا SDK فعلي يرسل سجلات أو diagnostics). راجع تصنيف كل حقل وفق الأسئلة الفعلية.
 - **Purposes:** app functionality, account management, fraud prevention/security, notifications; purchases/subscription management في تطبيق التاجر فقط.
-- **Data sharing:** مراجعة Supabase, Expo Push, SMS OTP provider, RevenueCat and Google Play Billing وفق عقودهم؛ لا تضع "No sharing" قبل التحقق من كونهم service providers ومعالجة كل SDK.
+- **Data sharing:** مراجعة Supabase, Expo Push, Google OAuth, custom email SMTP provider, RevenueCat and Google Play Billing وفق عقودهم؛ لا تضع "No sharing" قبل التحقق من كونهم service providers ومعالجة كل SDK.
 - **Encrypted in transit:** تحقّق من HTTPS/TLS في كل اتصال فعلي، وليس من مصدر JavaScript فقط.
 - **Can users request deletion?** توجد وظيفة طلب الحذف داخل إعدادات الكود ورابط ويب؛ يجب إجراء اختبار طلب وحذف فعلي في مشروع اختبار منفصل، مع تحديد ما يبقى من سجلات مشتركة وأساس الاحتفاظ.
 - **Advertising:** لا توجد SDK إعلانات ظاهرة في package.json الذي راجعناه؛ تحقق من Android merged manifest وAAB قبل اختيار "No ads".
 - **Financial features declaration:** التطبيق يتتبع ديون المحلات، فلا تجب خطأ بأن التطبيق لا يخص بيانات مالية. اختر التصنيف المطابق حرفياً من خيارات Google بعد مراجعة طبيعة الخدمة؛ لا تعرضه على أنه مُقرض أو مقدم قروض نقدية.
 - **Target audience:** صُمم للاستخدام التجاري أو لإدارة حسابات الكبار؛ راجع إعداد جمهور Google والأسئلة العمرية، ولا تستهدف الأطفال دون تحقق.
 - **Permissions:** الإشعارات؛ افحص الصلاحيات الفعلية من Android Manifest الناتج. لا تضف صلاحيات الرسائل SMS أو جهات الاتصال أو الملفات دون ضرورة وتبرير.
-- **App access:** تسجيل الدخول OTP برقم هاتف عراقي؛ يلزم توفير حسابي اختبار وآلية مراجعة قانونية عاملة دون مشاركة رموز SMS حقيقية أو تعطيل الأمان.
+- **App access:** تسجيل الدخول بالبريد الإلكتروني الموثّق أو Google؛ يلزم توفير حسابَي مراجعة حقيقيين وآلية وصول تعمل خلال المراجعة دون تعطيل الأمان.
 
 ## متطلب مسار الاختبار قبل Production
 
@@ -64,7 +64,7 @@
 2. Google Play يتطلب Android 16 / target API **36** للتطبيقات الجديدة/التحديثات الحالية منذ 31 أغسطس 2026 بحسب سياسة Google؛ أثبت targetSdkVersion من الـ AAB قبل التقديم.
 3. ابنِ AAB موقعاً فعلياً في EAS، تأكد من رقم versionCode غير مستخدم، وافحص الـ permissions وحالة crash.
 4. ارفع أولاً إلى Internal testing مع حسابات اختبار، وليس Production مباشرة.
-5. اختبر هاتفياً: OTP العراقي، الربط بين التطبيقين، الطلب والاعتراض، حدود الدين، تقييد الوصول، انقطاع الإنترنت والحذف.
+5. اختبر على الهاتف: Google OAuth ورمز/رابط البريد، الربط بين دورَي التطبيق الموحد، الطلب والاعتراض، حدود الدين، تقييد الوصول، انقطاع الإنترنت والحذف.
 6. إعداد منتجات Google Play Billing الثلاثة، ربط RevenueCat وmerchant_pro، اختبار الشراء/الإلغاء/الاستعادة قبل إتاحة Production. أسعار 2,500 و12,500 و20,000 د.ع أهداف تجارية، ويُعرض السعر الفعلي من المتجر.
 7. اكمل App content: Privacy policy, Data safety, Financial features, Content rating, Target audience, Ads, App access, Government/other declarations إذا ظهرت، ثم Full store listing وصور حقيقية وشعار وصورة Feature Graphic.
 8. عند جاهزية الاختبارات وإصلاح العوائق، أرسل إلى المسار الملائم للمراجعة، وراجع نتائج Play Console بدلاً من افتراض القبول.

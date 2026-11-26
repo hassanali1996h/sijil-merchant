@@ -13,7 +13,8 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "expo-notifications"
+      "expo-notifications",
+      "expo-web-browser"
     ],
     "ios": {
       "bundleIdentifier": "com.debtledgeriq.sijil",

@@ -46,7 +46,7 @@ export default function CustomerHomeScreen() {
     // signed-in user is the CUSTOMER, not every row their merchant RLS can read.
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData.user) {
-      Alert.alert(t('common.error'), userError?.message ?? t('auth.phone'));
+      Alert.alert(t('common.error'), userError?.message ?? t('auth.signInTitle'));
       setLinks([]);
       setTransactions([]);
       setLoading(false);

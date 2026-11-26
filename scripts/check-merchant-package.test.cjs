@@ -13,8 +13,8 @@ function run(config) {
   rmSync(dir,{recursive:true,force:true});
   return result;
 }
-test('accepts exact merchant package',()=>assert.equal(run(JSON.stringify({expo:{android:{package:'com.debtledgeriq.sijil'}}})).status,0));
-test('rejects mismatched merchant package',()=>assert.equal(run(JSON.stringify({expo:{android:{package:'com.debtledgeriq.sijil.merchant'}}})).status,1));
+test('accepts exact merchant package',()=>assert.equal(run(JSON.stringify({expo:{android:{package:'com.debtledgeriq.sijil.merchant'}}})).status,0));
+test('rejects mismatched merchant package',()=>assert.equal(run(JSON.stringify({expo:{android:{package:'com.debtledgeriq.sijil'}}})).status,1));
 test('rejects absent package',()=>assert.equal(run(JSON.stringify({expo:{android:{}}})).status,1));
 test('rejects missing config',()=>assert.equal(run(null).status,1));
 test('rejects invalid JSON',()=>assert.equal(run('{').status,1));

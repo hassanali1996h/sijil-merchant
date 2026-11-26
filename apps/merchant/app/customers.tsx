@@ -3,10 +3,10 @@ import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, Text
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { getMerchantAccessState, palette, radii, toAsciiDigits } from '@debt/shared';
+import { getMerchantAccessState, palette, radii } from '@debt/shared';
 import { supabase } from '../src/lib/supabase';
 
-type CustomerLink = { id: string; customer_display_name: string; customer_phone_e164: string | null; credit_limit_iqd: number | string; status: string; created_at: string };
+type CustomerLink = { id: string; customer_display_name: string; customer_phone_e164: string | null; customer_email: string | null; credit_limit_iqd: number | string; status: string; created_at: string };
 const PAGE_SIZE = 30;
 
 export default function MerchantCustomersScreen() {
@@ -46,21 +46,20 @@ export default function MerchantCustomersScreen() {
     let rows: CustomerLink[] = [];
     if (appliedSearch) {
       const pattern = `%${appliedSearch.replace(/[%_]/g, '')}%`;
-      const phoneDigits = toAsciiDigits(appliedSearch).replace(/\D/g, '');
-      const phoneSearch = phoneDigits.startsWith('0') ? `964${phoneDigits.slice(1)}` : phoneDigits;
-      const base = () => supabase.from('customer_links').select('id,customer_display_name,customer_phone_e164,credit_limit_iqd,status,created_at').eq('business_id', business.id).order('created_at', { ascending: false }).limit(PAGE_SIZE);
-      const [{ data: byName }, { data: byPhone }] = await Promise.all([
+      const emailSearch = appliedSearch.toLowerCase().replace(/[%_]/g, '');
+      const base = () => supabase.from('customer_links').select('id,customer_display_name,customer_email,customer_phone_e164,credit_limit_iqd,status,created_at').eq('business_id', business.id).order('created_at', { ascending: false }).limit(PAGE_SIZE);
+      const [{ data: byName }, { data: byEmail }] = await Promise.all([
         base().ilike('customer_display_name', pattern),
-        base().ilike('customer_phone_e164', `%${phoneSearch}%`),
+        base().ilike('customer_email', `%${emailSearch}%`),
       ]);
       const unique = new Map<string, CustomerLink>();
-      for (const row of [...(byName ?? []), ...(byPhone ?? [])] as CustomerLink[]) unique.set(row.id, row);
+      for (const row of [...(byName ?? []), ...(byEmail ?? [])] as CustomerLink[]) unique.set(row.id, row);
       rows = [...unique.values()].sort((left, right) => right.created_at.localeCompare(left.created_at));
       setHasMore(false);
       setTotalCount(rows.length);
     } else {
       const { data, count, error } = await supabase.from('customer_links')
-        .select('id,customer_display_name,customer_phone_e164,credit_limit_iqd,status,created_at', { count: 'exact' })
+        .select('id,customer_display_name,customer_email,customer_phone_e164,credit_limit_iqd,status,created_at', { count: 'exact' })
         .eq('business_id', business.id)
         .order('created_at', { ascending: false })
         .range(0, PAGE_SIZE - 1);
@@ -90,7 +89,7 @@ export default function MerchantCustomersScreen() {
     }
     const start = customers.length;
     const { data, error } = await supabase.from('customer_links')
-      .select('id,customer_display_name,customer_phone_e164,credit_limit_iqd,status,created_at')
+      .select('id,customer_display_name,customer_email,customer_phone_e164,credit_limit_iqd,status,created_at')
       .eq('business_id', business.id)
       .order('created_at', { ascending: false })
       .range(start, start + PAGE_SIZE - 1);
@@ -133,12 +132,12 @@ export default function MerchantCustomersScreen() {
           <Pressable key={customer.id} onPress={() => router.push({ pathname: '/customer/[linkId]', params: { linkId: customer.id } })} style={({ pressed }) => [styles.customerCard, pressed && styles.pressed]}>
             <View style={styles.avatar}><Text style={styles.avatarText}>{customer.customer_display_name.trim().charAt(0)}</Text></View>
             <View style={styles.customerCopy}>
-              <Text numberOfLines={1} style={styles.customerName}>{customer.customer_phone_e164 === null ? t('account.deletedAccount') : customer.customer_display_name}</Text>
-              <Text style={styles.phone}>{customer.customer_phone_e164}</Text>
+              <Text numberOfLines={1} style={styles.customerName}>{!customer.customer_phone_e164 && !customer.customer_email ? t('account.deletedAccount') : customer.customer_display_name}</Text>
+              <Text style={styles.phone}>{customer.customer_email}</Text>
             </View>
             <View style={styles.customerStatus}>
               <View style={[styles.statusDot, customer.status === 'active' && styles.statusDotActive]} />
-              <Text style={[styles.statusText, customer.status === 'active' && styles.statusTextActive]}>{customer.customer_phone_e164 === null ? t('account.deletedAccount') : customer.status === 'active' ? t('merchant.customerActive') : t('merchant.customerInvited')}</Text>
+              <Text style={[styles.statusText, customer.status === 'active' && styles.statusTextActive]}>{!customer.customer_phone_e164 && !customer.customer_email ? t('account.deletedAccount') : customer.status === 'active' ? t('merchant.customerActive') : t('merchant.customerInvited')}</Text>
             </View>
             <Text style={styles.chevron}>‹</Text>
           </Pressable>

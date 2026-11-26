@@ -76,7 +76,7 @@ export function AccountSettings({ languageControl, onBack, onSignedOut, readDele
           </Pressable>
           {privacyExpanded && (
             <>
-              <Text style={styles.body}>{t('account.privacyPhone')}</Text>
+              <Text style={styles.body}>{t('account.privacyAuth')}</Text>
               <Text style={styles.body}>{t('account.privacyLedger')}</Text>
               <Text style={styles.body}>{t('account.privacyNotifications')}</Text>
               <Text style={styles.body}>{t('account.privacyDeletion')}</Text>

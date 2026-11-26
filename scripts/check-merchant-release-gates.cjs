@@ -33,5 +33,5 @@ if (failed) {
   console.error('\nRELEASE BLOCKED. Do not build or upload until Play package identity and all checks are verified.');
   process.exitCode = 1;
 } else {
-  console.log('\nPreflight passed. OTP, RLS, real-device tests, EAS and Play review remain separate required gates.');
+  console.log('\nPreflight passed. Live email/Google provider setup, cross-account RLS, real-device authentication, RevenueCat, EAS production environment and Google Play policy approval remain separate required gates.');
 }
