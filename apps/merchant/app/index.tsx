@@ -17,7 +17,7 @@ export default function WelcomeScreen() {
     supabase.auth.getSession().then(({ data }) => {
       if (!alive) return;
       setChecking(false);
-      if (data.session) router.replace('/home');
+      if (data.session) router.replace('/roles');
     }).catch(() => alive && setChecking(false));
     return () => { alive = false; };
   }, [router]);
@@ -47,8 +47,8 @@ export default function WelcomeScreen() {
 
         <View style={styles.copy}>
           <Text style={styles.eyebrow}>{t('app.welcome')}</Text>
-          <Text style={styles.title}>{t('merchant.homeGreeting')}</Text>
-          <Text style={styles.subtitle}>{t('merchant.createShopPrompt')}</Text>
+          <Text style={styles.title}>{t('merged.chooseRole')}</Text>
+          <Text style={styles.subtitle}>{t('merged.intro')}</Text>
         </View>
 
         <View style={styles.bottom}>

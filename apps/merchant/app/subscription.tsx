@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { palette, radii } from '@debt/shared';
 import type { PurchasesPackage } from 'react-native-purchases';
 import { loadAvailablePackages, preparePurchases, Purchases, syncServerEntitlement } from '../src/lib/purchases';
+import { supabase } from '../src/lib/supabase';
 
-type ScreenState = 'loading' | 'ready' | 'empty' | 'missing_key' | 'web_unsupported' | 'signed_out' | 'error';
+type ScreenState = 'loading' | 'ready' | 'empty' | 'missing_key' | 'web_unsupported' | 'signed_out' | 'not_merchant' | 'error';
 
 const productOrder = ['merchant_monthly', 'merchant_6_months', 'merchant_annual'];
 const productNameKeys: Record<string, string> = {
@@ -31,6 +32,13 @@ export default function MerchantSubscriptionScreen() {
 
   const loadOffers = useCallback(async () => {
     setScreenState('loading');
+    // Customer-only accounts must never be prompted for merchant subscriptions.
+    const { data: currentUser, error: authError } = await supabase.auth.getUser();
+    if (authError || !currentUser.user) { setScreenState('signed_out'); return; }
+    const { data: ownedBusiness, error: ownerError } = await supabase.from('businesses')
+      .select('id').eq('owner_user_id', currentUser.user.id).maybeSingle();
+    if (ownerError) { setScreenState('error'); return; }
+    if (!ownedBusiness) { setScreenState('not_merchant'); return; }
     const setup = await preparePurchases().catch(() => 'error' as const);
     if (setup !== 'ready') {
       setScreenState(setup);
@@ -118,6 +126,7 @@ export default function MerchantSubscriptionScreen() {
       : screenState === 'missing_key' ? 'setupPending'
         : screenState === 'web_unsupported' ? 'webUnsupported'
           : screenState === 'signed_out' ? 'signedOut'
+          : screenState === 'not_merchant' ? 'merchantOnly'
             : screenState === 'error' ? 'loadError' : null;
 
   return (

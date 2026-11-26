@@ -180,6 +180,7 @@ export default function MerchantHomeScreen() {
             </View>
           </View>
           <View style={styles.topActions}>
+            <Pressable accessibilityRole="button" accessibilityLabel={t('merged.changeRole')} onPress={() => router.push('/roles')} style={{backgroundColor:palette.primaryTint,borderRadius:12,paddingHorizontal:10,paddingVertical:8}}><Text style={{color:palette.primary,fontWeight:'800'}}>{t('merged.changeRole')}</Text></Pressable>
             <LanguageControl />
             <Pressable accessibilityRole="button" accessibilityLabel={t('common.settings')} onPress={() => router.push('/settings')} style={styles.profileButton}>
               <Text style={styles.profileInitial}>{business?.name?.trim().charAt(0) || '•'}</Text>

@@ -1,3 +1,12 @@
+# UNIFIED SIJIL DECISION ? 2026-11-26 (supersedes the two-app release plan)
+
+- Publish a single app named Sijil from apps/merchant with existing Google Play package com.debtledgeriq.sijil.merchant and existing Expo project/Android signing.
+- Port customer experience into apps/merchant/app/client/; customers are always free. Merchants alone receive server-backed 30-day trial and RevenueCat billing.
+- One OTP-authenticated user can use both roles; switching UI role does not grant server authorization or paid entitlements.
+- The former customer repo is a read-only source/reference; do not build/release a second Android app without a new product-owner decision.
+- Prior instructions below that require two app releases are obsolete. Security and privacy requirements remain in force.
+
+---
 # Codex instructions — Debt Ledger
 
 You are implementing a two-app, production-intended debt ledger for Iraq. Read all of `README.md`, `docs/PRODUCT_SPEC.md`, `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/STORE_SETUP.md`, and `docs/RELEASE_CHECKLIST.md` before changing code.
